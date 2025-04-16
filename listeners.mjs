@@ -86,14 +86,15 @@ function setupListeners(){
         for(const touch of e.changedTouches){
             if(startPosMap.get(touch.identifier)) {
                 const pos = toBoard(V2.new(touch.clientX, touch.clientY + yOffset))
-                const orientation = calculateOrientation(pos, startPosMap.get(touch.identifier))
+                const startPos = startPosMap.get(touch.identifier)
+                const orientation = calculateOrientation(startPos, pos)
                 let arsenal
-                if(pos.y > board.width / 2) {
+                if(startPos.y > board.width / 2) {
                     arsenal = p0Arsenal
                 }else{
                     arsenal = p1Arsenal
                 }
-                arsenal.patterns[arsenal.activePattern].spawn(pos, board, orientation.flipDiagonal, orientation.flipHorizontal, orientation.flipVertical)
+                arsenal.patterns[arsenal.activePattern].spawn(startPos, board, orientation.flipDiagonal, orientation.flipHorizontal, orientation.flipVertical)
                 startPosMap.delete(touch.identifier)
                 currentPosMap.delete(touch.identifier)
             }

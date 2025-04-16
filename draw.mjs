@@ -30,19 +30,20 @@ function drawBoard(){
     }
     ctx.fill()
 
+    // Previews
     ctx.fillStyle = "gray"
     ctx.globalAlpha = 0.5
     ctx.beginPath()
     for(const [id, startPos] of startPosMap){
         const currentPos = currentPosMap.get(id)
-        const orientation = calculateOrientation(currentPos, startPos)
+        const orientation = calculateOrientation(startPos, currentPos)
         let arsenal
-        if(currentPos.y > board.height / 2){
+        if(startPos.y > board.height / 2){
             arsenal = p0Arsenal
         }else{
             arsenal = p1Arsenal
         }
-        const cells = arsenal.patterns[arsenal.activePattern].getPositions(currentPos, board, orientation.flipDiagonal, orientation.flipHorizontal, orientation.flipVertical)
+        const cells = arsenal.patterns[arsenal.activePattern].getPositions(startPos, board, orientation.flipDiagonal, orientation.flipHorizontal, orientation.flipVertical)
         for(const cell of cells){
             ctx.moveTo(cell.x + 1 / 2 + 1 / 4, cell.y + 1 / 2)
             ctx.arc(cell.x + 1 / 2, cell.y + 1 / 2, 1 / 2, 0, Meth.TAU)
