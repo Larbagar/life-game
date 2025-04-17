@@ -67,6 +67,7 @@ function setupListeners(){
                 const pos = toBoard(V2.new(touch.clientX, touch.clientY + yOffset))
                 startPosMap.set(touch.identifier, pos.xy)
                 currentPosMap.set(touch.identifier, pos.xy)
+                navigator.vibrate(1)
             }
         }
     })
