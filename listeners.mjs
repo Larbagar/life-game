@@ -44,10 +44,6 @@ const currentPosMap = new Map()
 
 const yOffset = 0
 
-function clickArsenal(pos, arsenal){
-
-}
-
 function setupListeners(){
     addEventListener("touchstart", e => {
         for(const touch of e.changedTouches){
@@ -56,6 +52,7 @@ function setupListeners(){
                     5 * Math.floor((touch.clientY - innerHeight / 2 - innerWidth / 2) / (innerWidth / 5)) +
                     Math.floor(touch.clientX / (innerWidth / 5))
                 if(i < p0Arsenal.patterns.length){
+                    navigator.vibrate(1)
                     p0Arsenal.activePattern = i
                 }
             }else if(touch.clientY - innerHeight / 2 < -innerWidth / 2) {
@@ -63,6 +60,7 @@ function setupListeners(){
                     5 * Math.floor((-touch.clientY + innerHeight / 2 - innerWidth / 2) / (innerWidth / 5)) +
                     Math.floor((innerWidth - touch.clientX) / (innerWidth / 5))
                 if(i < p1Arsenal.patterns.length){
+                    navigator.vibrate(1)
                     p1Arsenal.activePattern = i
                 }
             }else{
@@ -85,6 +83,7 @@ function setupListeners(){
     addEventListener("touchend", e => {
         for(const touch of e.changedTouches){
             if(startPosMap.get(touch.identifier)) {
+                navigator.vibrate(1)
                 const pos = toBoard(V2.new(touch.clientX, touch.clientY + yOffset))
                 const startPos = startPosMap.get(touch.identifier)
                 const orientation = calculateOrientation(startPos, pos)

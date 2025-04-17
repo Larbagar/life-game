@@ -62,6 +62,10 @@ function drawBoard(){
 }
 
 function drawArsenal(arsenal){
+    ctx.globalAlpha = 0.5
+    ctx.fillStyle = "gray"
+    ctx.fillRect(0.2 * Math.floor(Meth.mod(arsenal.activePattern, 5)) + 0.01, 0.2 * Math.floor(arsenal.activePattern / 5) + 0.01, 0.18, 0.18)
+
     ctx.globalAlpha = 1
     ctx.fillStyle = "black"
     for(let i = 0; i < arsenal.patterns.length; i++){
