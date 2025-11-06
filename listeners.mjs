@@ -51,7 +51,7 @@ function setupListeners(){
                 5 * Math.floor((e.clientY - innerHeight / 2 - innerWidth / 2) / (innerWidth / 5)) +
                 Math.floor(e.clientX / (innerWidth / 5))
             if(i < p0Arsenal.patterns.length){
-                navigator.vibrate(1)
+                navigator.vibrate?.(1)
                 p0Arsenal.activePattern = i
             }
         }else if(e.clientY - innerHeight / 2 < -innerWidth / 2) {
@@ -59,14 +59,14 @@ function setupListeners(){
                 5 * Math.floor((-e.clientY + innerHeight / 2 - innerWidth / 2) / (innerWidth / 5)) +
                 Math.floor((innerWidth - e.clientX) / (innerWidth / 5))
             if(i < p1Arsenal.patterns.length){
-                navigator.vibrate(1)
+                navigator.vibrate?.(1)
                 p1Arsenal.activePattern = i
             }
         }else{
             const pos = toBoard(V2.new(e.clientX, e.clientY + yOffset))
             startPosMap.set(e.pointerId, pos.xy)
             currentPosMap.set(e.pointerId, pos.xy)
-            navigator.vibrate(1)
+            navigator.vibrate?.(1)
         }
     })
 
@@ -79,7 +79,7 @@ function setupListeners(){
 
     addEventListener("pointerup", e => {
         if(startPosMap.get(e.pointerId)) {
-            navigator.vibrate(1)
+            navigator.vibrate?.(1)
             const pos = toBoard(V2.new(e.clientX, e.clientY + yOffset))
             const startPos = startPosMap.get(e.pointerId)
             const orientation = calculateOrientation(startPos, pos)
