@@ -45,59 +45,53 @@ const currentPosMap = new Map()
 const yOffset = 0
 
 function setupListeners(){
-    addEventListener("touchstart", e => {
-        for(const touch of e.changedTouches){
-            if(touch.clientY - innerHeight / 2 > innerWidth / 2){
-                const i =
-                    5 * Math.floor((touch.clientY - innerHeight / 2 - innerWidth / 2) / (innerWidth / 5)) +
-                    Math.floor(touch.clientX / (innerWidth / 5))
-                if(i < p0Arsenal.patterns.length){
-                    navigator.vibrate(1)
-                    p0Arsenal.activePattern = i
-                }
-            }else if(touch.clientY - innerHeight / 2 < -innerWidth / 2) {
-                const i =
-                    5 * Math.floor((-touch.clientY + innerHeight / 2 - innerWidth / 2) / (innerWidth / 5)) +
-                    Math.floor((innerWidth - touch.clientX) / (innerWidth / 5))
-                if(i < p1Arsenal.patterns.length){
-                    navigator.vibrate(1)
-                    p1Arsenal.activePattern = i
-                }
+    addEventListener("pointerdown", e => {
+        if(e.clientY - innerHeight / 2 > innerWidth / 2){
+            const i =
+                5 * Math.floor((e.clientY - innerHeight / 2 - innerWidth / 2) / (innerWidth / 5)) +
+                Math.floor(e.clientX / (innerWidth / 5))
+            if(i < p0Arsenal.patterns.length){
+                navigator.vibrate(1)
+                p0Arsenal.activePattern = i
+            }
+        }else if(e.clientY - innerHeight / 2 < -innerWidth / 2) {
+            const i =
+                5 * Math.floor((-e.clientY + innerHeight / 2 - innerWidth / 2) / (innerWidth / 5)) +
+                Math.floor((innerWidth - e.clientX) / (innerWidth / 5))
+            if(i < p1Arsenal.patterns.length){
+                navigator.vibrate(1)
+                p1Arsenal.activePattern = i
+            }
+        }else{
+            const pos = toBoard(V2.new(e.clientX, e.clientY + yOffset))
+            startPosMap.set(e.pointerId, pos.xy)
+            currentPosMap.set(e.pointerId, pos.xy)
+            navigator.vibrate(1)
+        }
+    })
+
+    addEventListener("pointermove", e => {
+        const pos = currentPosMap.get(e.pointerId)
+        if(pos) {
+            pos.xy = toBoard(V2.new(e.clientX, e.clientY + yOffset))
+        }
+    })
+
+    addEventListener("pointerup", e => {
+        if(startPosMap.get(e.pointerId)) {
+            navigator.vibrate(1)
+            const pos = toBoard(V2.new(e.clientX, e.clientY + yOffset))
+            const startPos = startPosMap.get(e.pointerId)
+            const orientation = calculateOrientation(startPos, pos)
+            let arsenal
+            if(startPos.y > board.width / 2) {
+                arsenal = p0Arsenal
             }else{
-                const pos = toBoard(V2.new(touch.clientX, touch.clientY + yOffset))
-                startPosMap.set(touch.identifier, pos.xy)
-                currentPosMap.set(touch.identifier, pos.xy)
-                navigator.vibrate(1)
+                arsenal = p1Arsenal
             }
-        }
-    })
-
-    addEventListener("touchmove", e => {
-        for(const touch of e.changedTouches){
-            const pos = currentPosMap.get(touch.identifier)
-            if(pos) {
-                pos.xy = toBoard(V2.new(touch.clientX, touch.clientY + yOffset))
-            }
-        }
-    })
-
-    addEventListener("touchend", e => {
-        for(const touch of e.changedTouches){
-            if(startPosMap.get(touch.identifier)) {
-                navigator.vibrate(1)
-                const pos = toBoard(V2.new(touch.clientX, touch.clientY + yOffset))
-                const startPos = startPosMap.get(touch.identifier)
-                const orientation = calculateOrientation(startPos, pos)
-                let arsenal
-                if(startPos.y > board.width / 2) {
-                    arsenal = p0Arsenal
-                }else{
-                    arsenal = p1Arsenal
-                }
-                arsenal.patterns[arsenal.activePattern].spawn(startPos, board, orientation.flipDiagonal, orientation.flipHorizontal, orientation.flipVertical)
-                startPosMap.delete(touch.identifier)
-                currentPosMap.delete(touch.identifier)
-            }
+            arsenal.patterns[arsenal.activePattern].spawn(startPos, board, orientation.flipDiagonal, orientation.flipHorizontal, orientation.flipVertical)
+            startPosMap.delete(e.pointerId)
+            currentPosMap.delete(e.pointerId)
         }
 
         // const cell = pos.xy.floor()
